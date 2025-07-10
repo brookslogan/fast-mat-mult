@@ -8,6 +8,8 @@ K <- 5
 withr::with_rng_version("3.5", withr::with_seed(4775832, {
   X <- matrix(rpois(I*J, 10), I, J)
   Y <- matrix(rpois(J*K, 10), J, K)
+  # Y <- matrix(seq_len(J*K), J, K)
+  # Y <- matrix(, J, K) %>% {.[seq_along(.)] <- as.numeric(paste0(row(.), col(.))); .}
 }))
 
 omegaIJK <- exp(2*pi*1i/(I*J*K))
@@ -167,4 +169,23 @@ cbind(Xspread, Yspread)
 # This may be connected to initial intuition in notebook sketch that Y->Yhatp
 # transformation should only negate part of exponent.
 
-# TODO finish debugging
+Yspread2 <-
+  array(0, c(I, K, J)) %>%
+  {.[1L,,] <- t(Y[,rev(seq_len(K))]) %>% {.[(seq_along(.) - 1L + K - 1L)%%length(.)+1L]}; dim(.) <- NULL; .}
+
+sapply(seq_along(XY) - 1L, function(shift) {
+  (Xspread * Yspread2[((seq_along(Yspread2) - 1L) - shift) %% length(Yspread2) + 1L]) %>%
+    sum() %>%
+    {}
+}) %>%
+  `dim<-`(dim(XY))
+
+cbind(Xspread, Yspread2)
+
+stopifnot(all(dplyr::near(XY,
+                          sapply(seq_along(XY) - 1L, function(shift) {
+                            (Xspread * Yspread2[((seq_along(Yspread2) - 1L) - shift) %% length(Yspread2) + 1L]) %>%
+                              sum() %>%
+                              {}
+                          }))))
+
