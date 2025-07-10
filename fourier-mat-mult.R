@@ -189,3 +189,5 @@ stopifnot(all(dplyr::near(XY,
                               {}
                           }))))
 
+# FIXME preceding hat lineup all seems bogus...
+Xhat / Xhat[2]
