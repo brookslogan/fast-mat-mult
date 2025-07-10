@@ -158,7 +158,7 @@ dplyr::near(XY,
 # FIXME wrong
 XY
 sapply(seq_along(XY) - 1L, function(shift) {
-  (Xspread * Yspread[((seq_along(Yspread) - 1L) - shift) %% length(Yspread) + 1L]) %>%
+
     sum() %>%
     {}
 }) %>%
@@ -191,3 +191,14 @@ stopifnot(all(dplyr::near(XY,
 
 # FIXME preceding hat lineup all seems bogus...
 Xhat / Xhat[2]
+
+fft(Xspread) * fft(c(Yspread2[[1L]], rev(tail(Yspread2, -1L)))) / fft(XYspread)
+fft(Xspread) * fft(Yspread2) / fft(XYspread)
+fft(Xspread) * fft(rev(Yspread2)) / fft(XYspread)
+
+fft(XYspread)
+
+stopifnot(all.equal(XYspread[seq_len(I*K)], as.vector(XY)))
+
+# fft of XY entries is given by taking every Jth element of fft of XYspread
+stopifnot(all.equal(fft(XYspread)[(seq_len(I*K)-1L) * J + 1L], fft(as.vector(XY))))
