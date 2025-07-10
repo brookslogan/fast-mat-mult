@@ -188,6 +188,7 @@ stopifnot(all(dplyr::near(XY,
                               sum() %>%
                               {}
                           }))))
+stopifnot(all(dplyr::near(XY, convolve(Xspread, Yspread2)[seq_len(I*K)])))
 
 # FIXME preceding hat lineup all seems bogus...
 Xhat / Xhat[2]
@@ -202,3 +203,46 @@ stopifnot(all.equal(XYspread[seq_len(I*K)], as.vector(XY)))
 
 # fft of XY entries is given by taking every Jth element of fft of XYspread
 stopifnot(all.equal(fft(XYspread)[(seq_len(I*K)-1L) * J + 1L], fft(as.vector(XY))))
+
+fft(as.vector(X))
+fft(Xspread) # contains shared entries, but not simply at the indices we'd need to read off XY transform
+
+fft(c(2,2))
+
+fft(c(2,2,0,0,0,0))
+
+fft(c(2,0,0,2,0,0))
+
+stopifnot(all(dplyr::near(fft(c(2,2,0,0,0,0)), c(4, 3 - sqrt(3)*1i, 1 - sqrt(3)*1i, 0, 1+sqrt(3)*1i, 3+sqrt(3)*1i))))
+
+exp(-2*pi*1i / 3)^(1:3) * 2 # potentially related
+
+exp(-2*pi*1i / 3)^(1:6)
+
+cumsum(vctrs::vec_interleave(fft(c(2,2)), 0, 0) + c(0, head(exp(-2*pi*1i / 3)^(1:3) * 2, - 1)))
+
+fft(c(1,3))
+fft(c(1,3,0,0,0,0))
+fft(c(1,0,0,3,0,0))
+
+fft(c(5,3))
+fft(c(5,3,0,0,0,0))
+fft(c(5,0,0,3,0,0))
+
+fft(c(1,0))
+fft(c(1,0,0,0,0,0))
+fft(c(1,0,0,0,0,0))
+
+fft(c(0,1))
+fft(c(0,1,0,0,0,0))
+fft(c(0,0,0,1,0,0))
+
+convolve(exp(2*pi*1i/6*0:2), c(1,0,0))
+
+# TODO check geometric progression formula
+
+# TODO try to word as convolution in either domain?
+
+# TODO also try comparing summations to see if can factor out some sum-of-finer-root-powers as a multiplier
+
+# TODO alternatively, consider it as summing multiple sparse combs; see if comb and comb shifts are nice at all...
