@@ -253,11 +253,71 @@ fft(c(1,0,0,0,4,0,0,0))
 fft(c(0,1,0,0,0,4,0,0))
 stopifnot(all.equal(fft(c(0,1,0,0,0,4,0,0)), fft(c(1,0,0,0,4,0,0,0)) * exp(-2*pi*1i/8 * 0:7)))
 
-fft(Xspread) # some mirror kind of symmetry
-fft(Yspread) # periodic
-fft(XYspread) # mirror
+fft(Xspread) # at least some mirror kind of symmetry
+fft(Yspread) # periodic + mirrored within periodic
+fft(XYspread) # at least mirror
 fft(as.vector(XY)) # pulling from XYspread every J
 
 fft(t(X)) # manipulate based on shifts & linearity?
 
 fft(Xspread)[seq(1, I*J*K, by = J)]
+
+Xcomb0 <- X
+Xcomb0[-(0L + 1L),] <- 0
+
+Xcomb0spread <-
+  array(0, c(I, K, J)) %>%
+  {.[,1L,] <- Xcomb0; dim(.) <- NULL; .}
+
+Xcomb0spread_hat <- fft(Xcomb0spread) %>% round()
+
+Xteeth0_hat <- fft(X[(0L + 1L), ])
+
+stopifnot(all.equal(rep(Xteeth0_hat, I*K), Xcomb0spread_hat))
+
+Xcomb1 <- X
+Xcomb1[-(1L + 1L),] <- 0
+
+Xcomb1spread <-
+  array(0, c(I, K, J)) %>%
+  {.[,1L,] <- Xcomb1; dim(.) <- NULL; .}
+
+Xcomb1spread_hat <- fft(Xcomb1spread) %>% round()
+
+Xteeth1_hat <- fft(X[(1L + 1L), ])
+
+Xcomb10 <- Xcomb1
+Xcomb10[0 + 1,] <- Xcomb10[1 + 1,]
+Xcomb10[1 + 1,] <- 0
+
+Xcomb10spread <-
+  array(0, c(I, K, J)) %>%
+  {.[,1L,] <- Xcomb10; dim(.) <- NULL; .}
+
+Xcomb10spread_hat <- fft(Xcomb10spread)
+
+Xcomb1spread_hat/Xcomb10spread_hat  - omegaIJK^-(seq_len(I*J*K) - 1L)
+# ... not exact??
+
+abs(Xcomb1spread_hat) / abs(Xcomb10spread_hat)
+
+## FIXME begin copied from help(fft)
+
+## Slow Discrete Fourier Transform (DFT) - e.g., for checking the formula
+fft0 <- function(z, inverse=FALSE) {
+  n <- length(z)
+  if(n == 0) return(z)
+  k <- 0:(n-1)
+  ff <- (if(inverse) 1 else -1) * 2*pi * 1i * k/n
+  vapply(1:n, function(h) sum(z * exp(ff*(h-1))), complex(1))
+}
+
+## end copied from help(fft)
+
+Xcomb1spread_hat / fft0(Xcomb1spread)
+# XXX !!! numerical issues this large?!
+
+Xcomb1spread_hat / rep(Xteeth1_hat, I*K)
+omegaIJK^-(seq_len(I*J*K) - 1L)
+
+(Xcomb1spread_hat / rep(Xteeth1_hat, I*K))
