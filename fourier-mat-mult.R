@@ -246,3 +246,18 @@ convolve(exp(2*pi*1i/6*0:2), c(1,0,0))
 # TODO also try comparing summations to see if can factor out some sum-of-finer-root-powers as a multiplier
 
 # TODO alternatively, consider it as summing multiple sparse combs; see if comb and comb shifts are nice at all...
+
+fft(c(1,0,4,0))
+fft(c(1,0,0,4,0,0))
+fft(c(1,0,0,0,4,0,0,0))
+fft(c(0,1,0,0,0,4,0,0))
+stopifnot(all.equal(fft(c(0,1,0,0,0,4,0,0)), fft(c(1,0,0,0,4,0,0,0)) * exp(-2*pi*1i/8 * 0:7)))
+
+fft(Xspread) # some mirror kind of symmetry
+fft(Yspread) # periodic
+fft(XYspread) # mirror
+fft(as.vector(XY)) # pulling from XYspread every J
+
+fft(t(X)) # manipulate based on shifts & linearity?
+
+fft(Xspread)[seq(1, I*J*K, by = J)]
