@@ -253,9 +253,9 @@ fft(c(1,0,0,0,4,0,0,0))
 fft(c(0,1,0,0,0,4,0,0))
 stopifnot(all.equal(fft(c(0,1,0,0,0,4,0,0)), fft(c(1,0,0,0,4,0,0,0)) * exp(-2*pi*1i/8 * 0:7)))
 
-fft(Xspread) # at least some mirror kind of symmetry (but this just from real inputs)
+fft(Xspread) # at least some mirror kind of symmetry (might just be the real-input property; check whether exact or conjugate)
 fft(Yspread) # periodic + mirrored within periodic
-fft(XYspread) # at least mirror (but this just from real inputs)
+fft(XYspread) # at least mirror (maybe just from real inputs; check whether exact or conjugate)
 fft(as.vector(XY)) # pulling from XYspread every J
 
 fft(t(X)) # manipulate based on shifts & linearity?
