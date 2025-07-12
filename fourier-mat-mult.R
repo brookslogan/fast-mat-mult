@@ -320,4 +320,4 @@ Xcomb1spread_hat / fft0(Xcomb1spread)
 Xcomb1spread_hat / rep(Xteeth1_hat, I*K)
 omegaIJK^-(seq_len(I*J*K) - 1L)
 
-(Xcomb1spread_hat / rep(Xteeth1_hat, I*K))
+stopifnot(all.equal(fft0(Xcomb1spread), rep(Xteeth1_hat, I*K) * omegaIJK^-(seq_len(I*J*K) - 1L)))
