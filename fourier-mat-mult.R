@@ -253,9 +253,9 @@ fft(c(1,0,0,0,4,0,0,0))
 fft(c(0,1,0,0,0,4,0,0))
 stopifnot(all.equal(fft(c(0,1,0,0,0,4,0,0)), fft(c(1,0,0,0,4,0,0,0)) * exp(-2*pi*1i/8 * 0:7)))
 
-fft(Xspread) # at least some mirror kind of symmetry
+fft(Xspread) # at least some mirror kind of symmetry (but this just from real inputs)
 fft(Yspread) # periodic + mirrored within periodic
-fft(XYspread) # at least mirror
+fft(XYspread) # at least mirror (but this just from real inputs)
 fft(as.vector(XY)) # pulling from XYspread every J
 
 fft(t(X)) # manipulate based on shifts & linearity?
@@ -321,3 +321,21 @@ Xcomb1spread_hat / rep(Xteeth1_hat, I*K)
 omegaIJK^-(seq_len(I*J*K) - 1L)
 
 stopifnot(all.equal(fft0(Xcomb1spread), rep(Xteeth1_hat, I*K) * omegaIJK^-(seq_len(I*J*K) - 1L)))
+
+# Summing shifted combs seems similar to a performing DFTs along another
+# dimension, but the omega used is different, and explicitly 0-padding to get
+# the right omega from a vanilla algorithm would ruin performance. (See
+# fft-square-radix.R for an idea launched by this.) Is it possible to implicitly
+# 0-pad the input and request only certain outputs and still be able to do
+# something like an FFT without having to realize a larger intermediate result?
+# TODO
+
+# Backing off from this idea, what would performance look like? We need to:
+# * I times:
+#   * Perform a J log J FFT.
+#   * Extract IK entries from logical rep(Xteethi_hat, I*K).  (IK work.)
+#   * Extract IK entries from logical omegaIJK^-(seq_len(I*J*K)-1L).  (IK work.)
+#   * IK work to incorporate this contribution.
+#
+# So this is IJlogJ + I^2K work. Potentially interesting and could look at
+# manipulations, but should first look at performing FFT with finer omega.
