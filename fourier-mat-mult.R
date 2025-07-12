@@ -358,3 +358,34 @@ stopifnot(all.equal(fft0(Xcomb1spread)[(seq_len(I*K)-1L) * J + 1L],
 
 # TODO try to get the appropriately-rearranged&reversed Yspread to check on the
 # ending first?
+
+Y
+# colrow indices
+# 11, 24, 23, 22, 21, 34, 33, 32, 31, 44, 43, 42, 41, 14, 13, 12
+# 00, 13, 12, 11, 10, 23, 22, 21, 20, 33, 32, 31, 30, 03, 02, 01
+
+
+# col(Y) %>%
+# row(Y) %>%
+Yadj_vec <-
+  Y %>%
+  {vctrs::vec_c(!!!lapply(seq_len(K), function(k) rev(.[,k])))} %>%
+  {c(tail(., J*K - J + 1L), head(., -(J*K - J + 1L)))} %>%
+  # # reversal for convolution
+  # {c(head(., 1L), rev(tail(., -1L)))} %>%
+  {}
+# Yadj_spread <-
+#   array(0, c(I, K, J)) %>%
+#   {.[1L,,] <- Yadj_vec; dim(.) <- NULL; .} %>%
+#   {c(head(., 1L), rev(tail(., -1L)))} %>%
+#   {}
+Yadj_spread <-
+  vctrs::vec_interleave(Yadj_vec, !!!rep(list(0), I-1L)) %>%
+  {c(head(., 1L), rev(tail(., -1L)))} %>%
+  {}
+# TODO finish spreading
+convolve(Xspread, Yadj_spread)
+
+Yadj_spread
+
+# FIXME wrong; TODO figure out appropriate spread vecs
