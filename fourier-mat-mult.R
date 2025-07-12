@@ -335,7 +335,11 @@ stopifnot(all.equal(fft0(Xcomb1spread), rep(Xteeth1_hat, I*K) * omegaIJK^-(seq_l
 #   * Perform a J log J FFT.
 #   * Extract IK entries from logical rep(Xteethi_hat, I*K).  (IK work.)
 #   * Extract IK entries from logical omegaIJK^-(seq_len(I*J*K)-1L).  (IK work.)
-#   * IK work to incorporate this contribution.
+#   * IK work to form and incorporate this contribution.
 #
 # So this is IJlogJ + I^2K work. Potentially interesting and could look at
 # manipulations, but should first look at performing FFT with finer omega.
+#
+# Though... extraction is [(seq_len(I*K)-1L) * J + 1L], every J. That seems to
+# be just rep(Xteethi_hat[0+1], I*K)? Only using one entry from Xteethi_hat?? If
+# correct, that might allow things to simplify.
