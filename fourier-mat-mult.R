@@ -343,3 +343,18 @@ stopifnot(all.equal(fft0(Xcomb1spread), rep(Xteeth1_hat, I*K) * omegaIJK^-(seq_l
 # Though... extraction is [(seq_len(I*K)-1L) * J + 1L], every J. That seems to
 # be just rep(Xteethi_hat[0+1], I*K)? Only using one entry from Xteethi_hat?? If
 # correct, that might allow things to simplify.
+
+stopifnot(all.equal(fft0(Xcomb1spread)[(seq_len(I*K)-1L) * J + 1L],
+                    rep(Xteeth1_hat[0L+1L], I*K) * omegaIJK^-(seq_len(I*J*K) - 1L)[(seq_len(I*K)-1L) * J + 1L]))
+stopifnot(all.equal(fft0(Xcomb1spread)[(seq_len(I*K)-1L) * J + 1L],
+                    rep(Xteeth1_hat[0L+1L], I*K) * omegaIJK^-((seq_len(I*K) - 1L)*J)))
+stopifnot(all.equal(fft0(Xcomb1spread)[(seq_len(I*K)-1L) * J + 1L],
+                    Xteeth1_hat[0L+1L] * omegaIJK^-((seq_len(I*K) - 1L)*J)))
+
+# This seems to be working so far, but seems fishy that it is just using the 0th
+# teethi_hat entry (just the sum of the row's entries?? how would other
+# information be factored in?? seems that there must be a mistake here).
+# FIXME
+
+# TODO try to get the appropriately-rearranged&reversed Yspread to check on the
+# ending first?
