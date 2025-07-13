@@ -392,3 +392,5 @@ Y
 
 # Y rowcol 1-based indices
 # 11 0 0 25 0 0 24 0 0 23 0 0 22 0 0 21 0 0 35 0 0 34 0 0 33 0 0 32 0 0 31 0 0 45 0 0 44 0 0 43 0 0 42 0 0 41 0 0 15 0 0 14 0 0 13 0 0 12 0 0
+
+# XXX think again about convolution and convlutionhat.  are trash entries going to make it unfriendly, or is extracting every Kth actually going to work?  consider alternative entry arrangements to try to prevent trash entries, or perhaps something as simple as changing the dimension ordering to see if can have convolution have desired entry every Kth entries, as front-loaded entries with guaranteed zeros seems potentially easier to transform compared to ....
