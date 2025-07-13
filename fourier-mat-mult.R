@@ -6,10 +6,11 @@ J <- 4
 K <- 5
 
 withr::with_rng_version("3.5", withr::with_seed(4775832, {
-  X <- matrix(rpois(I*J, 10), I, J)
-  Y <- matrix(rpois(J*K, 10), J, K)
+  # X <- matrix(rpois(I*J, 10), I, J)
+  X <- matrix(, I, J) %>% {.[seq_along(.)] <- as.numeric(paste0(row(.), col(.))); .}
+  # Y <- matrix(rpois(J*K, 10), J, K)
   # Y <- matrix(seq_len(J*K), J, K)
-  # Y <- matrix(, J, K) %>% {.[seq_along(.)] <- as.numeric(paste0(row(.), col(.))); .}
+  Y <- matrix(, J, K) %>% {.[seq_along(.)] <- as.numeric(paste0(row(.), col(.))); .}
 }))
 
 omegaIJK <- exp(2*pi*1i/(I*J*K))
@@ -91,6 +92,7 @@ Yhatp <- sapply(seq_len(K) - 1L, function(khat) {
   sapply(seq_len(I) - 1L, function(ihat) {
     js <- row(Y) - 1L
     ks <- col(Y) - 1L
+    # XXX not sure negation is actually needed for convolution setup
     sum(Y * omegaIJK^((I*js*K + I*ks))*(ihat + I*khat))
   })
 })
@@ -367,25 +369,26 @@ Y
 
 # col(Y) %>%
 # row(Y) %>%
-Yadj_vec <-
-  Y %>%
-  {vctrs::vec_c(!!!lapply(seq_len(K), function(k) rev(.[,k])))} %>%
-  {c(tail(., J*K - J + 1L), head(., -(J*K - J + 1L)))} %>%
-  # # reversal for convolution
-  # {c(head(., 1L), rev(tail(., -1L)))} %>%
-  {}
+# Yadj_vec <-
+#   Y %>%
+#   {vctrs::vec_c(!!!lapply(seq_len(K), function(k) rev(.[,k])))} %>%
+#   {c(tail(., J*K - J + 1L), head(., -(J*K - J + 1L)))} %>%
+#   # # reversal for convolution XXX not sure if necessary
+#   # {c(head(., 1L), rev(tail(., -1L)))} %>%
+#   {}
 # Yadj_spread <-
 #   array(0, c(I, K, J)) %>%
 #   {.[1L,,] <- Yadj_vec; dim(.) <- NULL; .} %>%
 #   {c(head(., 1L), rev(tail(., -1L)))} %>%
 #   {}
-Yadj_spread <-
-  vctrs::vec_interleave(Yadj_vec, !!!rep(list(0), I-1L)) %>%
-  {c(head(., 1L), rev(tail(., -1L)))} %>%
-  {}
-# TODO finish spreading
-convolve(Xspread, Yadj_spread)
-
-Yadj_spread
+# Yadj_spread <-
+#   vctrs::vec_interleave(Yadj_vec, !!!rep(list(0), I-1L)) %>%
+#   # {c(head(., 1L), rev(tail(., -1L)))} %>%
+#   {}
+# convolve(Xspread, Yadj_spread)
+# Yadj_spread
 
 # FIXME wrong; TODO figure out appropriate spread vecs
+
+# Y rowcol 1-based indices
+# 11 0 0 25 0 0 24 0 0 23 0 0 22 0 0 21 0 0 35 0 0 34 0 0 33 0 0 32 0 0 31 0 0 45 0 0 44 0 0 43 0 0 42 0 0 41 0 0 15 0 0 14 0 0 13 0 0 12 0 0
