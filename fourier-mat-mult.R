@@ -442,3 +442,5 @@ round(convolve(Xspread, Yadj_spread) - XYspread[seq_len(I*K)], 9L)
 # Don't immediately see nice relation with DFTs... though could say that want to
 # truncate the non-transform result and word as convolving transform with sinc
 # function... but is this going to require touching I*J*K entries?
+
+# Linear IJ -> IK transformation not considering Y seems doomed... consider 2x8 x 8x1.
