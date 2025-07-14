@@ -6,11 +6,11 @@ J <- 4
 K <- 5
 
 withr::with_rng_version("3.5", withr::with_seed(4775832, {
-  # X <- matrix(rpois(I*J, 10), I, J)
-  X <- matrix(, I, J) %>% {.[seq_along(.)] <- as.numeric(paste0(row(.), col(.))); .}
-  # Y <- matrix(rpois(J*K, 10), J, K)
+  X <- matrix(rpois(I*J, 10), I, J)
+  # X <- matrix(, I, J) %>% {.[seq_along(.)] <- as.numeric(paste0(row(.), col(.))); .}
+  Y <- matrix(rpois(J*K, 10), J, K)
   # Y <- matrix(seq_len(J*K), J, K)
-  Y <- matrix(, J, K) %>% {.[seq_along(.)] <- as.numeric(paste0(row(.), col(.))); .}
+  # Y <- matrix(, J, K) %>% {.[seq_along(.)] <- as.numeric(paste0(row(.), col(.))); .}
 }))
 
 omegaIJK <- exp(2*pi*1i/(I*J*K))
@@ -390,7 +390,44 @@ Y
 
 # FIXME wrong; TODO figure out appropriate spread vecs
 
+# XXX think again about convolution and convolutionhat.  are trash entries going to make it unfriendly, or is extracting every Jth actually going to work?  consider alternative entry arrangements to try to prevent trash entries, or perhaps something as simple as changing the dimension ordering to see if can have convolution have desired entry every Jth entries, as front-loaded entries with guaranteed zeros seems potentially easier to transform compared to ....
+
+# TODO think about different-prime/coprime dimensionalities, index overlaps, etc.
+
 # Y rowcol 1-based indices
 # 11 0 0 25 0 0 24 0 0 23 0 0 22 0 0 21 0 0 35 0 0 34 0 0 33 0 0 32 0 0 31 0 0 45 0 0 44 0 0 43 0 0 42 0 0 41 0 0 15 0 0 14 0 0 13 0 0 12 0 0
 
-# XXX think again about convolution and convlutionhat.  are trash entries going to make it unfriendly, or is extracting every Jth actually going to work?  consider alternative entry arrangements to try to prevent trash entries, or perhaps something as simple as changing the dimension ordering to see if can have convolution have desired entry every Jth entries, as front-loaded entries with guaranteed zeros seems potentially easier to transform compared to ....
+
+circ_advance <- function(x, shift) {
+  x[(seq_along(x) - 1L + shift) %% length(x) + 1L]
+}
+
+Yadj_vec <-
+  apply(Y, 1, rev) %>%
+  as.vector() %>%
+  circ_advance(K-1L)
+
+Yadj_spread <-
+  vctrs::vec_interleave(Yadj_vec, !!!rep(list(0), I-1L)) %>%
+  {}
+
+# desired entries
+stopifnot(all.equal(convolve(Xspread, Yadj_spread)[seq_len(I*K)], XYspread[seq_len(I*K)]))
+# trash entries
+round(convolve(Xspread, Yadj_spread) - XYspread[seq_len(I*K)], 9L)
+
+# fft0(convolve(Xspread, Yadj_spread))
+# fft0(XYspread)
+
+# fft0(convolve(Xspread, Yadj_spread)) %>% {.[seq(1, length(.), by = J)]}
+# fft0(convolve(Xspread, Yadj_spread)) %>% matrix(J, I*K) %>% colSums()
+# fft0(XYspread) %>% {.[seq(1, length(.), by = J)]}
+# fft0(XYspread) %>% matrix(J, I*K) %>% colSums()
+
+# (fft0(convolve(Xspread, Yadj_spread)) / fft0(XYspread)) %>% round(6L)
+# (fft0(convolve(Xspread, Yadj_spread)) / fft0(XYspread)) %>% {.[seq(1, length(.), by = J)]} %>% {tail(., -1L) / head(., -1L)}
+# (fft0(convolve(Xspread, Yadj_spread)) / fft0(XYspread)) %>% {.[seq(1, length(.), by = K)]} %>% round(6L)
+
+# Don't immediately see nice relation with DFTs... though could say that want to
+# truncate the non-transform result and word as convolving transform with sinc
+# function... but is this going to require touching I*J*K entries?
