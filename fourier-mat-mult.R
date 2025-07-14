@@ -390,7 +390,18 @@ Y
 
 # FIXME wrong; TODO figure out appropriate spread vecs
 
-# XXX think again about convolution and convolutionhat.  are trash entries going to make it unfriendly, or is extracting every Jth actually going to work?  consider alternative entry arrangements to try to prevent trash entries, or perhaps something as simple as changing the dimension ordering to see if can have convolution have desired entry every Jth entries, as front-loaded entries with guaranteed zeros seems potentially easier to transform compared to ....
+# XXX think again about convolution and convolutionhat.  are trash entries going to make it unfriendly, or is extracting every Jth actually going to work?  consider alternative entry arrangements to try to prevent trash entries, or perhaps something as simple as changing the dimension ordering to see if can have convolution have desired entry every Jth entries, as front-loaded entries with guaranteed zeros seems potentially easier to transform compared to .... but might also have trash entries that give contributions to intended things...
+
+fft(c(5,0,1,0,6,0,3,0))
+fft(c(5,2,1,3,6,1,3,1))
+
+stopifnot(all.equal(
+  fft(c(5,0,1,0,6,0,3,0))[1:4],
+  fft(c(5,2,1,3,6,1,3,1)) %>% matrix(4, 2) %>% rowSums() %>% `/`(2) %>% `[`(1:4)
+))
+# TODO ^ think more about whether this is also computationally doomed
+
+# TODO think about padding approaches
 
 # TODO think about different-prime/coprime dimensionalities, index overlaps, etc.
 
