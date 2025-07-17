@@ -56,3 +56,15 @@ tcrossprod(c(+1,-1,+1,-1)+1, c(+1,+1,-1,-1))
 # TODO think about starting with checkerboard, subtracting away
 # off-checkerboards?  definitely feels like sublevel results are
 # important
+
+1 - (tcrossprod(-c(+1,-1,+1,-1), c(+1,-1,+1,-1)) +
+  tcrossprod(-c(+1,+1,-1,-1), c(+1,+1,-1,-1)) -
+  ((1+tcrossprod(-c(+1,-1,+1,-1), c(+1,-1,+1,-1))) *
+  (1+tcrossprod(-c(+1,+1,-1,-1), c(+1,+1,-1,-1)))-2)/2)
+
+(1+tcrossprod(c(+1,-1,+1,-1), c(+1,-1,+1,-1))) *
+  (1+tcrossprod(c(+1,+1,-1,-1), c(+1,+1,-1,-1)))/4
+
+# What is multiplication analogue in this case?
+# * given numbers
+# * given the 0th bit of each number where we are trying to find 0th bit of result
