@@ -108,3 +108,38 @@ m22 <- m2
 # poly(omega_p) scaling entries of x by omega^{0:(p-1)} and y by
 # inverse, though this is probably covered in Fourier brainstorming &
 # notes.
+
+
+tcrossprod(bitwAnd(0:7, 1), bitwAnd(0:7, 1))
+tcrossprod(bitwAnd(0:7, 2), bitwAnd(0:7, 2))
+tcrossprod(bitwAnd(0:7, 4), bitwAnd(0:7, 4))
+
+tcrossprod(bitwAnd(0:7, 1)/1*2-1, bitwAnd(0:7, 1)/1*2-1)
+tcrossprod(bitwAnd(0:7, 2)/2*2-1, bitwAnd(0:7, 2)/2*2-1)
+tcrossprod(bitwAnd(0:7, 4)/4*2-1, bitwAnd(0:7, 4)/4*2-1)
+
+(tcrossprod(bitwAnd(0:7, 1)/1*2-1, bitwAnd(0:7, 1)/1*2-1)+1)/2
+(tcrossprod(bitwAnd(0:7, 2)/2*2-1, bitwAnd(0:7, 2)/2*2-1)+1)/2
+(tcrossprod(bitwAnd(0:7, 4)/4*2-1, bitwAnd(0:7, 4)/4*2-1)+1)/2
+
+(tcrossprod(bitwAnd(0:7, 1)/1*2-1, bitwAnd(0:7, 1)/1*2-1)+1)/2 *
+(tcrossprod(bitwAnd(0:7, 2)/2*2-1, bitwAnd(0:7, 2)/2*2-1)+1)/2 *
+(tcrossprod(bitwAnd(0:7, 4)/4*2-1, bitwAnd(0:7, 4)/4*2-1)+1)/2
+
+tcrossprod(c(1,1,1,1,0,0,0,0), c(0,0,0,0,1,1,1,1))
+
+tcrossprod(c(1,1,0,0,0,0,0,0), c(0,0,1,1,0,0,0,0)) +
+tcrossprod(c(0,0,0,0,1,1,0,0), c(0,0,0,0,0,0,1,1))
+
+tcrossprod(c(1,1,0,0,1,1,0,0), c(0,0,1,1,0,0,1,1))
+
+# Look at parity stuff to try to get omega^{# bit mismatches}
+# coefficients, so can sum poly(omega) evals only over some prime
+# ~log(J) powers?  Or perhaps omega^{first bit mismatch} +
+# omega^{second bit mismatch} + ... to make matching circle around to
+# zero, and try to get "complement" somehow? (might just be scaling by
+# number of mismatches...). Poly approach having separate variable for
+# each bit seems to just become FFT.  Something with products rather
+# than sums?  Might end up pairing any chain of entries with a bit
+# match in each etc.... any way to combine with subsetting to try to
+# avoid?
