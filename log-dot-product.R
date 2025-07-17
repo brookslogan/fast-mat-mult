@@ -31,3 +31,28 @@ as.matrix(c(1,-1,1,-1)) %*% t(as.matrix(c(1,-1,1,-1))) + as.matrix(c(1,1,-1,-1))
 # parity... something about subtracting away where index bits
 # mismatch?  or getting bits representing the number of bit mismatches
 # in the indices?
+
+
+
+
+tcrossprod(c(+1,-1,+1,-1), c(+1,-1,+1,-1))
+tcrossprod(c(+1,+1,-1,-1), c(+1,+1,-1,-1))
+tcrossprod(c(+1,-1,+1,-1), c(+1,+1,-1,-1))
+tcrossprod(c(+1,+1,-1,-1), c(+1,-1,+1,-1))
+
+tcrossprod(c(+1,-1,+1,-1)+1, c(+1,+1,-1,-1))
+
+# m({mismatch on bit 1} U {mismatch on bit 2})
+# = m({mismatch on bit 1}) + m({mismatch on bit 2}) - m({mismatch on bit 1 and 2})
+
+# tcrossprod(c(+1,-1,+1,-1), c(+1,-1,+1,-1)) +
+# tcrossprod(c(+1,+1,-1,-1), c(+1,+1,-1,-1)) -
+# revdiag...
+
+
+# TODO think about ways to simultaneously refine rectangles summing to
+# approximate triangle incorporating each finer bit
+
+# TODO think about starting with checkerboard, subtracting away
+# off-checkerboards?  definitely feels like sublevel results are
+# important
