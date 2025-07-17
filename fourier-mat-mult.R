@@ -444,3 +444,8 @@ round(convolve(Xspread, Yadj_spread) - XYspread[seq_len(I*K)], 9L)
 # function... but is this going to require touching I*J*K entries?
 
 # Linear IJ -> IK transformation not considering Y seems doomed... consider 2x8 x 8x1.
+
+# Unitary Fourier transform along a dimension has same dot product
+# (a^TU* Ub = a^Tb, AU*UB=AB).  Not promising.  Might want to check
+# for finer omega along that dimension than used for transform along
+# that dimension to see if there is anything interesting.
