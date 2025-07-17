@@ -1,7 +1,7 @@
 
 # Think about a^T b as summing diagonal of b a^T.  Can we subtract
 # away off-diagonal rectangles of b a^T efficiently enough to get
-# log-time result with other-vector-independent linear/friendly
+# log-time result with other-vector-independent linearithmic/friendly
 # transformation?
 
 #    b1 b2 b3 b4 b5 b6 b7 b8
@@ -73,8 +73,38 @@ tcrossprod(c(+1,-1,+1,-1)+1, c(+1,+1,-1,-1))
 
 # This path actually based on cardinality calcs, but * for inverse
 # symdiff and +1/+2/etc. may be suspect.
-x <- tcrossprod(-c(+1,-1,+1,-1), c(+1,-1,+1,-1))
-y <- tcrossprod(-c(+1,+1,-1,-1), c(+1,+1,-1,-1))
-(1 - ((x+y+2)/2 - (x*y+1)/2))/2
+m1 <- tcrossprod(-c(+1,-1,+1,-1), c(+1,-1,+1,-1))
+m2 <- tcrossprod(-c(+1,+1,-1,-1), c(+1,+1,-1,-1))
+(1 - ((m1+m2+2)/2 - (m1*m2+1)/2))/2
 # Both multiplication and addition need to be mapped to analogues here
 # and above.  If they can be.
+
+x <- c(2,3,5,1)
+y <- c(5,4,1,2)
+
+x1 <- sum(x[c(1,3)]) - sum(x[c(2,4)])
+y1 <- sum(y[c(1,3)]) - sum(y[c(2,4)])
+x2 <- sum(x[c(1,2)]) - sum(x[c(3,4)])
+y2 <- sum(y[c(1,2)]) - sum(y[c(3,4)])
+
+t(x) %*% m1 %*% as.matrix(y)
+-x1*y1
+
+t(x) %*% m2 %*% as.matrix(y)
+-x2*y2
+x2*(sum(y)-y2)
+
+m1 == -1 & m2 == -1
+
+m11 <- m1
+m12 <- tcrossprod(-c(+1,-1,+1,-1), c(+1,+1,-1,-1))
+m21 <- tcrossprod(-c(+1,+1,-1,-1), c(+1,-1,+1,-1))
+m22 <- m2
+
+# ... multiplication still needs attention / is the spanner in the works
+
+
+# Diagonal extraction also calls to mind ideas about sum_{j=1}^p
+# poly(omega_p) scaling entries of x by omega^{0:(p-1)} and y by
+# inverse, though this is probably covered in Fourier brainstorming &
+# notes.
