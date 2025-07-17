@@ -68,3 +68,13 @@ tcrossprod(c(+1,-1,+1,-1)+1, c(+1,+1,-1,-1))
 # What is multiplication analogue in this case?
 # * given numbers
 # * given the 0th bit of each number where we are trying to find 0th bit of result
+
+# Or is this another op/way to get union/intersection?
+
+# This path actually based on cardinality calcs, but * for inverse
+# symdiff and +1/+2/etc. may be suspect.
+x <- tcrossprod(-c(+1,-1,+1,-1), c(+1,-1,+1,-1))
+y <- tcrossprod(-c(+1,+1,-1,-1), c(+1,+1,-1,-1))
+(1 - ((x+y+2)/2 - (x*y+1)/2))/2
+# Both multiplication and addition need to be mapped to analogues here
+# and above.  If they can be.
