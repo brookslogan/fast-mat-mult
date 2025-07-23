@@ -12,3 +12,9 @@
 # Wolfram Alpha says this is n log log n; asymptotic improvement over existing offerings?
 #
 # Could also consider higher-dimensional analogues, see if complexity differs at all.
+
+# FIXME TODO or would it be f(n) = 2 sqrt(n) f(sqrt(n)) + a n ??? for transforming along two directions
+#
+# or simply f(n) = 2 sqrt(n) f(sqrt(n))?
+# FIXME TODO cite https://www.wolframalpha.com/input?i=solve+f%28n%29+%3D+2+sqrt%28n%29+f%28sqrt%28n%29%29
+# n log n, not promising
