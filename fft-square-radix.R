@@ -18,3 +18,5 @@
 # or simply f(n) = 2 sqrt(n) f(sqrt(n))?
 # FIXME TODO cite https://www.wolframalpha.com/input?i=solve+f%28n%29+%3D+2+sqrt%28n%29+f%28sqrt%28n%29%29
 # n log n, not promising
+
+# or is it f(n) = sqrt(n) f(sqrt(n)) + a sqrt(n) log(sqrt(n)) ?
