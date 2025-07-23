@@ -449,3 +449,8 @@ round(convolve(Xspread, Yadj_spread) - XYspread[seq_len(I*K)], 9L)
 # (a^TU* Ub = a^Tb, AU*UB=AB).  Not promising.  Might want to check
 # for finer omega along that dimension than used for transform along
 # that dimension to see if there is anything interesting.
+
+# xk*yk = sum(x1..xk)*sum(y1..yk) - sum(x1..xk)*sum(y1..y{k-1}) -
+# sum(x1..x{k-1})*sum(y1..yk) + sum(x1..x{k-1})*sum(y1..y{k-1}).  Any
+# way to simplify telescoping result with Fourier transform?  Or other
+# ways of using integration/differentiation?
